@@ -25,6 +25,7 @@ def gmail_create_draft():
     if not creds or not creds.valid:
         if creds and creds.expired and creds.refresh_token:
             creds.refresh(Request())
+            print("refresh token")
         else:
             flow = InstalledAppFlow.from_client_secrets_file('credentials.json', SCOPES)
             creds = flow.run_local_server(port=0)
@@ -42,6 +43,8 @@ def gmail_create_draft():
         message['To'] = 'gduser2@workspacesamples.dev'
         message['From'] = 'gduser2@workspacesamples.dev'
         message['Subject'] = 'Hello from Python'
+        
+        message.add_header('Bcc', 'gduser2@workspacesamples.dev')
 
         # encoded message
         encoded_message = base64.urlsafe_b64encode(message.as_bytes()).decode()
@@ -55,7 +58,7 @@ def gmail_create_draft():
         draft = service.users().drafts().create(userId="me",
                                                 body=create_message).execute()
 
-        #service.users().drafts().send(userId="me", body=draft).execute()
+        service.users().drafts().send(userId="me", body=draft).execute()
 
     except HttpError as error:
         print(F'An error occurred: {error}')
