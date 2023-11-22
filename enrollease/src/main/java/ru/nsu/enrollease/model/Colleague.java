@@ -10,7 +10,7 @@ import org.springframework.data.mongodb.core.mapping.Document;
 @Document(collection = "users")
 @AllArgsConstructor
 @Data
-public class User {
+public class Colleague {
 
     @Id
     @NonNull
