@@ -7,7 +7,7 @@ def export_from_excel(filename):
     data_frame.dropna(axis=1, how='all', inplace=True)
 
     # Подключение к MongoDB
-    client = MongoClient(os.environ.get("MONGODBURL"),
+    client = MongoClient("",
                          27017)  # замените на свои параметры подключения
     db = client['proj']  # замените на название вашей базы данных
     collection = db['applicants']  # замените на название вашей коллекции
@@ -18,6 +18,11 @@ def export_from_excel(filename):
     # Импорт данных в MongoDB
     for _, row in data_frame.iterrows():
         document = row.to_dict()
+        c_d = document.copy()
+        for i in document:
+            if str(document[i]) == 'nan':
+                c_d.pop(i)
+        document = c_d
         collection.update_one({primary_key: document[primary_key]}, {"$set": document}, upsert=True)
 
 
