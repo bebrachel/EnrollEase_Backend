@@ -17,7 +17,7 @@ import ru.nsu.enrollease.dto.response.AllowOrGiveRolesResponse;
 import ru.nsu.enrollease.service.ColleagueService;
 
 @RestController
-@RequestMapping("/users")
+@RequestMapping("/colleagues")
 @RequiredArgsConstructor
 public class ColleagueController {
 
@@ -41,15 +41,15 @@ public class ColleagueController {
     /**
      * Можно валидировать через код запроса, а можно через TRUE/FALSE
      */
-    @Operation(summary = "Проверить gmail человека на доступ к нашему сервису")
+    @Operation(summary = "Проверить права человека на доступ к нашему сервису")
     @ApiResponses(value = {
         @ApiResponse(responseCode = "200", description = "Статус пользователя получен", content = {
             @Content(mediaType = "application/json", schema =
             @Schema(implementation = Boolean.class))
         })})
     @GetMapping("is_exists")
-    public boolean isAllowed(@RequestParam("email") String email) {
-        return colleagueService.isAllowed(email);
+    public boolean isAllowed(@RequestParam("token") String token) {
+        return colleagueService.isAllowed(token);
     }
 
 }
