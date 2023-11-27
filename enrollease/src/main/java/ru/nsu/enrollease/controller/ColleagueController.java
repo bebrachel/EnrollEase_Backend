@@ -14,6 +14,8 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import ru.nsu.enrollease.dto.request.AllowOrGiveRolesRequest;
 import ru.nsu.enrollease.dto.response.AllowOrGiveRolesResponse;
+import ru.nsu.enrollease.dto.response.GetAllApplicantsResponse;
+import ru.nsu.enrollease.dto.response.GetAllColleaguesResponse;
 import ru.nsu.enrollease.service.ColleagueService;
 
 @RestController
@@ -50,6 +52,17 @@ public class ColleagueController {
     @GetMapping("is_exists")
     public boolean isAllowed(@RequestParam("token") String token) {
         return colleagueService.isAllowed(token);
+    }
+
+    @Operation(summary = "Получить список всех коллег")
+    @ApiResponses(value = {
+        @ApiResponse(responseCode = "200", description = "Список коллег получен", content = {
+            @Content(mediaType = "application/json", schema =
+            @Schema(implementation = GetAllColleaguesResponse.class))
+        })})
+    @GetMapping
+    public GetAllColleaguesResponse findAllColleagues() {
+        return new GetAllColleaguesResponse(colleagueService.getAllColleagues());
     }
 
 }

@@ -24,11 +24,15 @@ public class ColleagueService {
         } else {
             user = new Colleague(email, roles);
         }
+        System.out.println(user);
         return colleagueRepository.save(user);
     }
 
     @Transactional
     public boolean isAllowed(@NonNull String email) {
         return colleagueRepository.existsByEmail(email);
+    }
+    public List<Colleague> getAllColleagues() {
+        return colleagueRepository.findAll();
     }
 }

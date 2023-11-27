@@ -14,7 +14,7 @@ import org.springframework.data.mongodb.core.mapping.Document;
 public class Applicant {
     @Id
     @NonNull
-    private String iian;
+    private String ФизическоеЛицоСНИЛС;
     @NonNull
-    private Map<String, String> data;
+    private Map<String, Object> data;
 }
