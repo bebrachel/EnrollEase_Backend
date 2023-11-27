@@ -20,6 +20,7 @@ import ru.nsu.enrollease.service.ColleagueService;
 
 @RestController
 @RequestMapping("/colleagues")
+
 @RequiredArgsConstructor
 public class ColleagueController {
 

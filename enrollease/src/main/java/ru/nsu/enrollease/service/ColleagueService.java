@@ -24,7 +24,6 @@ public class ColleagueService {
         } else {
             user = new Colleague(email, roles);
         }
-        System.out.println(user);
         return colleagueRepository.save(user);
     }
 

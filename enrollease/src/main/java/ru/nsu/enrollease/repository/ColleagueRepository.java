@@ -12,5 +12,4 @@ public interface ColleagueRepository extends MongoRepository<Colleague, String> 
     Colleague findByEmail(String email);
 
     boolean existsByEmail(String email);
-
 }

@@ -13,6 +13,6 @@ public interface ApplicantRepository extends MongoRepository<Applicant, String> 
 //
     @Query("{ 'ФизическоеЛицоСНИЛС': ?0 }")
     boolean existsByPrimaryKey(String fieldValue);
-    boolean existsByФизическоеЛицоСНИЛС(String value);
 
+    boolean existsByФизическоеЛицоСНИЛС(String value);
 }

@@ -12,6 +12,7 @@ import org.springframework.data.mongodb.core.mapping.Document;
 @AllArgsConstructor
 @Data
 public class Applicant {
+
     @Id
     @NonNull
     private String ФизическоеЛицоСНИЛС;
