@@ -22,8 +22,8 @@ def export_from_excel(filename):
         for i in document:
             if str(document[i]) == 'nan':
                 c_d.pop(i)
-        document = c_d
-        collection.update_one({primary_key: document[primary_key]}, {"$set": document}, upsert=True)
+        doc = {primary_key:document[primary_key], 'data':c_d}
+        collection.update_one({primary_key: document[primary_key]}, {"$set": doc}, upsert=True)
 
 
 if __name__ == '__main__':
