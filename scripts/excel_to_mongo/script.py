@@ -20,9 +20,9 @@ def export_from_excel(filename):
         document = row.to_dict()
         c_d = document.copy()
         for i in document:
-            if str(document[i]) == 'nan':
+            if str(document[i]) == 'nan' or i == primary_key:
                 c_d.pop(i)
-        doc = {primary_key:document[primary_key], 'data':c_d}
+        doc = {primary_key: document[primary_key], 'data': c_d}
         collection.update_one({primary_key: document[primary_key]}, {"$set": doc}, upsert=True)
 
 
