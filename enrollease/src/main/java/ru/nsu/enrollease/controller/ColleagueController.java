@@ -14,7 +14,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import ru.nsu.enrollease.dto.request.AllowOrGiveRolesRequest;
 import ru.nsu.enrollease.dto.response.AllowOrGiveRolesResponse;
-import ru.nsu.enrollease.dto.response.GetAllApplicantsResponse;
 import ru.nsu.enrollease.dto.response.GetAllColleaguesResponse;
 import ru.nsu.enrollease.service.ColleagueService;
 

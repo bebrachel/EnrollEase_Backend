@@ -13,7 +13,6 @@ import ru.nsu.enrollease.repository.ColleagueRepository;
 @RequiredArgsConstructor
 public class ColleagueService {
 
-//    private final MongoTemplate mongoTemplate;
     private final ColleagueRepository colleagueRepository;
 
     @Transactional

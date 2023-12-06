@@ -16,5 +16,6 @@ public class Colleague {
     @NonNull
     private String email;
     @NonNull
+    // сделать enum
     private List<String> roles;
 }
