@@ -14,13 +14,14 @@ public class ApplicantService {
 
     private final ApplicantRepository applicantRepository;
 
+    @Transactional
     public List<Applicant> getAllApplicants() {
         return applicantRepository.findAll();
     }
 
     @Transactional
-    public boolean isExists(@NonNull String primaryKey) {
-        return applicantRepository.existsByФизическоеЛицоСНИЛС(primaryKey);
+    public boolean isExists(@NonNull String email) {
+        return applicantRepository.existsByФизическоеЛицоСНИЛС(email);
     }
 
 }

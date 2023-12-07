@@ -15,7 +15,7 @@ public class Applicant {
     @Id
     @NonNull
     private String ФизическоеЛицоСНИЛС;
-//    @NonNull
+//    @NonNull for now
     private String status;
     @NonNull
     private Map<String, Object> data;
