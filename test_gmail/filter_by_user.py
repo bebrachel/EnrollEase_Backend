@@ -9,10 +9,9 @@ from google.auth.transport.requests import Request
 import os.path
 import base64
 
-
-
 # Области API
 SCOPES = ['https://www.googleapis.com/auth/gmail.readonly']
+
 
 def authenticate_gmail_api():
     creds = None
@@ -28,7 +27,6 @@ def authenticate_gmail_api():
         with open(token_file, 'w') as token:
             token.write(creds.to_json())
     return creds
-        
 
 
 def print_message_text(message):
@@ -44,7 +42,6 @@ def print_message_text(message):
             decoded_body = base64.urlsafe_b64decode(body['data']).decode('utf-8').split('>')[0]
             print(decoded_body)
             print("-----------------------------------")
-            
 
 
 if __name__ == '__main__':

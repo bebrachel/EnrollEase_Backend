@@ -6,10 +6,9 @@ from google.auth.transport.requests import Request
 import os.path
 import base64
 
-
-
 # Области API
 SCOPES = ['https://www.googleapis.com/auth/gmail.readonly']
+
 
 def authenticate_gmail_api():
     creds = None
@@ -30,6 +29,7 @@ def authenticate_gmail_api():
 
     return creds
 
+
 def get_message_body(message):
     if 'parts' in message['payload']:
         parts = message['payload']['parts']
@@ -44,26 +44,29 @@ def get_message_body(message):
             return base64.urlsafe_b64decode(body['data']).decode('utf-8')
     return None
 
+
 def show_chatty_threads():
-  creds = authenticate_gmail_api()
-  try:
-    service = build("gmail", "v1", credentials=creds)
-    threads = (service.users().threads().list(userId="me", q="from:gduser2@workspacesamples.dev OR to:gduser@workspacesamples.dev").execute().get("threads", []))
-    
-    # достаем самую свежую нить 
-    tdata = (service.users().threads().get(userId="me", id=threads[0]["id"]).execute())
-    
-    # печатаем кол-во сообщений в нити
-    for message in tdata["messages"]:
-        if message:
-            body = get_message_body(message)
-            if body:
-                print(f"Message ID: {message['id']}")
-                print(f"Full Text:\n{body}")
-                print("-----")
-  except HttpError as error:
-    print(f"An error occurred: {error}")
+    creds = authenticate_gmail_api()
+    try:
+        service = build("gmail", "v1", credentials=creds)
+        threads = (service.users().threads().list(userId="me",
+                                                  q="from:gduser2@workspacesamples.dev OR to:gduser@workspacesamples.dev").execute().get(
+            "threads", []))
+
+        # достаем самую свежую нить
+        tdata = (service.users().threads().get(userId="me", id=threads[0]["id"]).execute())
+
+        # печатаем кол-во сообщений в нити
+        for message in tdata["messages"]:
+            if message:
+                body = get_message_body(message)
+                if body:
+                    print(f"Message ID: {message['id']}")
+                    print(f"Full Text:\n{body}")
+                    print("-----")
+    except HttpError as error:
+        print(f"An error occurred: {error}")
 
 
 if __name__ == "__main__":
-  show_chatty_threads()
+    show_chatty_threads()

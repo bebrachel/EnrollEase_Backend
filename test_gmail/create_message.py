@@ -10,7 +10,6 @@ from google_auth_oauthlib.flow import InstalledAppFlow
 from googleapiclient.discovery import build
 from googleapiclient.errors import HttpError
 
-
 SCOPES = ['https://www.googleapis.com/auth/gmail.compose']
 
 
@@ -43,7 +42,7 @@ def gmail_create_draft():
         message['To'] = 'gduser2@workspacesamples.dev'
         message['From'] = 'gduser2@workspacesamples.dev'
         message['Subject'] = 'Hello from Python'
-        
+
         message.add_header('Bcc', 'gduser2@workspacesamples.dev')
 
         # encoded message
