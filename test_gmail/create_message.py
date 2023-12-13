@@ -13,7 +13,7 @@ from googleapiclient.errors import HttpError
 SCOPES = ['https://www.googleapis.com/auth/gmail.compose']
 
 
-def gmail_create_draft():
+def gmail_create_draft(sender, subject, content, recipients):
     creds = None
     # The file token.json stores the user's access and refresh tokens, and is
     # created automatically when the authorization flow completes for the first
@@ -24,7 +24,7 @@ def gmail_create_draft():
     if not creds or not creds.valid:
         if creds and creds.expired and creds.refresh_token:
             creds.refresh(Request())
-            print("refresh token")
+            # print("refresh token")
         else:
             flow = InstalledAppFlow.from_client_secrets_file('credentials.json', SCOPES)
             creds = flow.run_local_server(port=0)
@@ -37,13 +37,13 @@ def gmail_create_draft():
 
         message = EmailMessage()
 
-        message.set_content('some content')
+        message.set_content(content)
 
-        message['To'] = 'gduser2@workspacesamples.dev'
-        message['From'] = 'gduser2@workspacesamples.dev'
-        message['Subject'] = 'Hello from Python'
+        message['To'] = sender
+        # message['From'] = 'gduser2@workspacesamples.dev'
+        message['Subject'] = subject
 
-        message.add_header('Bcc', 'gduser2@workspacesamples.dev')
+        message.add_header('Bcc', "%s\r\n" % ",".join(recipients))
 
         # encoded message
         encoded_message = base64.urlsafe_b64encode(message.as_bytes()).decode()
@@ -67,4 +67,14 @@ def gmail_create_draft():
 
 
 if __name__ == '__main__':
-    gmail_create_draft()
+    import sys
+
+    args = sys.argv
+
+    try:
+        from ast import literal_eval
+
+        gmail_create_draft(args[1], args[2], args[3], literal_eval(args[4]))
+    except ValueError as err:
+        print(f'Recipients cannot be parsed\n'
+              f'Format must be like ["lolipop@gmail.com", "blacksparrow@ramble.rr"')
