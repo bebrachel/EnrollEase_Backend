@@ -3,9 +3,6 @@ from googleapiclient.errors import HttpError
 from google.oauth2.credentials import Credentials
 from google_auth_oauthlib.flow import InstalledAppFlow
 from google.auth.transport.requests import Request
-from google.oauth2.credentials import Credentials
-from google_auth_oauthlib.flow import InstalledAppFlow
-from google.auth.transport.requests import Request
 import os.path
 import base64
 
@@ -45,10 +42,14 @@ def print_message_text(message):
 
 
 if __name__ == '__main__':
+    import sys
+
+    args = sys.argv[1:]
+    companion = args[1]
     creds = authenticate_gmail_api()
     try:
         service = build("gmail", "v1", credentials=creds)
-        response = service.users().messages().list(userId='me', q="to:user@gmail").execute()
+        response = service.users().messages().list(userId='me', q=companion).execute()
         messages = response.get('messages', [])
         count = 1
         if messages:
@@ -59,4 +60,4 @@ if __name__ == '__main__':
                     break
                 print_message_text(service.users().messages().get(userId='me', id=message['id']).execute())
     except HttpError as error:
-        print(f"An error occurred: {error}")
+        print(f"An error occurred: {error}", file=sys.stderr)
