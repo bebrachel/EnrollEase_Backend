@@ -45,12 +45,13 @@ def get_message_body(message):
     return None
 
 
-def show_chatty_threads():
+def show_chatty_threads(companion):
     creds = authenticate_gmail_api()
+
     try:
         service = build("gmail", "v1", credentials=creds)
         threads = (service.users().threads().list(userId="me",
-                                                  q="from:gduser2@workspacesamples.dev OR to:gduser@workspacesamples.dev").execute().get(
+                                                  q=companion).execute().get(
             "threads", []))
 
         # достаем самую свежую нить
@@ -69,4 +70,8 @@ def show_chatty_threads():
 
 
 if __name__ == "__main__":
-    show_chatty_threads()
+    import sys
+
+    args = sys.argv[1:]
+    companion = args[0]
+    show_chatty_threads(companion)

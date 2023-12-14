@@ -45,7 +45,7 @@ if __name__ == '__main__':
     import sys
 
     args = sys.argv[1:]
-    companion = args[1]
+    companion = args[0]
     creds = authenticate_gmail_api()
     try:
         service = build("gmail", "v1", credentials=creds)
