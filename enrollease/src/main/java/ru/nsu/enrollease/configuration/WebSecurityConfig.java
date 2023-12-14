@@ -42,7 +42,7 @@ public class WebSecurityConfig {
                 auth.requestMatchers("/swagger-ui/**").permitAll();
                 auth.requestMatchers("/api-docs/**").permitAll();
                 auth.requestMatchers("/admin/**").hasAuthority("HEAD_OF_COMMISSION");
-                auth.requestMatchers("/**").authenticated();
+                auth.requestMatchers("/**").hasAuthority("DEFAULT_COLLEAGUE");
             })
             .csrf(AbstractHttpConfigurer::disable)
             .cors(withDefaults())

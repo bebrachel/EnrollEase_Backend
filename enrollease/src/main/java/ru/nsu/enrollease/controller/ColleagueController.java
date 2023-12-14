@@ -7,6 +7,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -24,7 +25,7 @@ public class ColleagueController {
     private final ColleagueService colleagueService;
     private final ColleagueRoleService colleagueRoleService;
 
-    @Operation(summary = "Разрешить человеку доступ к нашему сервису или выдать роли уже существующему")
+    @Operation(summary = "Разрешить человеку доступ к нашему сервису и установить указанные роли")
     @ApiResponses(value = {
         @ApiResponse(responseCode = "200", description = "Операция успешно выполнена", content = {
             @Content(mediaType = "application/json", schema =
@@ -50,8 +51,19 @@ public class ColleagueController {
             @Content(mediaType = "application/json", schema =
             @Schema(implementation = Boolean.class))
         })})
-    @GetMapping("/admin/colleagues/is_exists")
+    @GetMapping("/admin/colleagues/is_allowed")
     public boolean isAllowed(@RequestParam("email") String email) {
+        return colleagueService.isAllowed(email);
+    }
+
+    @Operation(summary = "Разрешить или запретить уже существующему пользователю использовать сервис")
+    @ApiResponses(value = {
+        @ApiResponse(responseCode = "200", description = "Статус изменён", content = {
+            @Content(mediaType = "application/json", schema =
+            @Schema(implementation = Boolean.class))
+        })})
+    @PostMapping("/admin/colleagues/set_active_status")
+    public boolean setActiveStatus(@RequestParam("email") String email) {
         return colleagueService.isAllowed(email);
     }
 

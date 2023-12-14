@@ -20,8 +20,8 @@ public class ApplicantService {
     }
 
     @Transactional
-    public boolean isExists(@NonNull String email) {
-        return applicantRepository.existsByФизическоеЛицоСНИЛС(email);
+    public boolean isExists(@NonNull String iian) {
+        return applicantRepository.existsByФизическоеЛицоСНИЛС(iian);
     }
 
 }
