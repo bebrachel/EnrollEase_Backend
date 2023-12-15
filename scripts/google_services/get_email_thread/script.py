@@ -1,33 +1,7 @@
-from googleapiclient.discovery import build
 from googleapiclient.errors import HttpError
-from google.oauth2.credentials import Credentials
-from google_auth_oauthlib.flow import InstalledAppFlow
-from google.auth.transport.requests import Request
-import os.path
 import base64
 
-# Области API
-SCOPES = ['https://www.googleapis.com/auth/gmail.readonly']
-
-
-def authenticate_gmail_api():
-    creds = None
-    token_file = 'token.json'
-
-    if os.path.exists(token_file):
-        creds = Credentials.from_authorized_user_file(token_file)
-
-    if not creds or not creds.valid:
-        if creds and creds.expired and creds.refresh_token:
-            creds.refresh(Request())
-        else:
-            flow = InstalledAppFlow.from_client_secrets_file('credentials.json', SCOPES)
-            creds = flow.run_local_server(port=0)
-
-        with open(token_file, 'w') as token:
-            token.write(creds.to_json())
-
-    return creds
+from google_services.Google import create_service
 
 
 def get_message_body(message):
@@ -45,11 +19,8 @@ def get_message_body(message):
     return None
 
 
-def show_chatty_threads(companion):
-    creds = authenticate_gmail_api()
-
+def show_chatty_threads(service, companion):
     try:
-        service = build("gmail", "v1", credentials=creds)
         threads = (service.users().threads().list(userId="me",
                                                   q=companion).execute().get(
             "threads", []))
@@ -72,6 +43,10 @@ def show_chatty_threads(companion):
 if __name__ == "__main__":
     import sys
 
+    service = create_service('gmail', 'v1', ['https://www.googleapis.com/auth/gmail.readonly'])
     args = sys.argv[1:]
+    if len(args) != 1:
+        print("Usage: python script.py <user_gmail_adress>")
+        exit(1)
     companion = args[0]
-    show_chatty_threads(companion)
+    show_chatty_threads(service, companion)
