@@ -8,7 +8,7 @@ from googleapiclient.errors import HttpError
 from google_services.Google import create_service
 
 
-def gmail_create_draft(subject, content, recipients):
+def gmail_create(subject, recipients, content):
     try:
         # create gmail api client
 
@@ -48,7 +48,7 @@ if __name__ == '__main__':
 
     args = sys.argv[1:]
     if len(args) != 3:
-        print('Usage: python script.py <subject> <body> <["recipient"*]>')
+        print('Usage: python script.py <subject> <["recipient"*]> <body>')
         exit(1)
 
     service = create_service('gmail', 'v1', ['https://www.googleapis.com/auth/gmail.compose'])
@@ -56,7 +56,7 @@ if __name__ == '__main__':
     try:
         from ast import literal_eval
 
-        gmail_create_draft(args[0], args[1], literal_eval(args[2]))
+        gmail_create(args[0], literal_eval(args[1]), args[2])
     except ValueError as err:
         print(f'Recipients cannot be parsed\n'
               f'Format must be like ["lolipop@gmail.com", "blacksparrow@ramble.rr"')

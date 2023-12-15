@@ -28,7 +28,9 @@ def export_from_excel(filename):
             name = document['ФИО']
             import os
             os.system(
-                f'cd ../google_drive_creation && python script.py "Индивидуальные достижения {name}" "{mail}"')
+                f'cd ../google_services/create_achievements_folder && python3 script.py "Индивидуальные достижения {name}" "{mail}"')
+            os.system(
+                f'cd ../send_message && python3 script.py "НГУ Магистратура" {mail} {"cat ./templates/АнкетаГуглдискИнструкция.txt"}')
 
 
 if __name__ == '__main__':
