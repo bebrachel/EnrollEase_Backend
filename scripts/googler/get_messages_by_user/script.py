@@ -1,29 +1,7 @@
-from googleapiclient.discovery import build
 from googleapiclient.errors import HttpError
-from google.oauth2.credentials import Credentials
-from google_auth_oauthlib.flow import InstalledAppFlow
-from google.auth.transport.requests import Request
-import os.path
 import base64
 
-# Области API
-SCOPES = ['https://www.googleapis.com/auth/gmail.readonly']
-
-
-def authenticate_gmail_api():
-    creds = None
-    token_file = 'token.json'
-    if os.path.exists(token_file):
-        creds = Credentials.from_authorized_user_file(token_file)
-    if not creds or not creds.valid:
-        if creds and creds.expired and creds.refresh_token:
-            creds.refresh(Request())
-        else:
-            flow = InstalledAppFlow.from_client_secrets_file('credentials.json', SCOPES)
-            creds = flow.run_local_server(port=0)
-        with open(token_file, 'w') as token:
-            token.write(creds.to_json())
-    return creds
+from ..Google import create_service
 
 
 def print_message_text(message):
@@ -41,14 +19,8 @@ def print_message_text(message):
             print("-----------------------------------")
 
 
-if __name__ == '__main__':
-    import sys
-
-    args = sys.argv[1:]
-    companion = args[0]
-    creds = authenticate_gmail_api()
+def get_messages_by_user(companion):
     try:
-        service = build("gmail", "v1", credentials=creds)
         response = service.users().messages().list(userId='me', q=companion).execute()
         messages = response.get('messages', [])
         count = 1
@@ -61,3 +33,15 @@ if __name__ == '__main__':
                 print_message_text(service.users().messages().get(userId='me', id=message['id']).execute())
     except HttpError as error:
         print(f"An error occurred: {error}", file=sys.stderr)
+
+
+if __name__ == '__main__':
+    import sys
+
+    args = sys.argv[1:]
+    if len(args) != 1:
+        print("Usage: python script.py <user_gmail_adress>")
+        exit(1)
+    companion = args[0]
+    service = create_service('gmail', 'v1', ['https://www.googleapis.com/auth/gmail.readonly'])
+    get_messages_by_user(companion)
