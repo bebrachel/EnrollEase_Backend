@@ -34,4 +34,8 @@ public class ColleagueService {
     public List<Colleague> getAllColleagues() {
         return colleagueRepository.findAll();
     }
+
+    public void deleteColleagueByEmail(@NonNull String email) {
+        colleagueRepository.deleteById(email);
+    }
 }

@@ -2,6 +2,7 @@ package ru.nsu.enrollease.repository;
 
 import java.util.Optional;
 import org.springframework.data.mongodb.repository.MongoRepository;
+import org.springframework.data.mongodb.repository.Query;
 import org.springframework.stereotype.Repository;
 import ru.nsu.enrollease.model.Colleague;
 
@@ -12,4 +13,5 @@ public interface ColleagueRepository extends MongoRepository<Colleague, String> 
     Optional<Colleague> findByEmail(String email);
 
     boolean existsByEmail(String email);
+    public void deleteById (String email);
 }

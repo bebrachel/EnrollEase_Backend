@@ -6,6 +6,8 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -14,7 +16,9 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import ru.nsu.enrollease.dto.request.AllowOrGiveRolesRequest;
 import ru.nsu.enrollease.dto.response.AllowOrGiveRolesResponse;
+import ru.nsu.enrollease.dto.response.ColleagueResponse;
 import ru.nsu.enrollease.dto.response.GetAllColleaguesResponse;
+import ru.nsu.enrollease.model.Colleague;
 import ru.nsu.enrollease.service.ColleagueRoleService;
 import ru.nsu.enrollease.service.ColleagueService;
 
@@ -41,6 +45,15 @@ public class ColleagueController {
             serviceResponse.getRoles());
     }
 
+    @Operation(summary = "Удалить человека из списка коллег")
+    @ApiResponses(value = {
+        @ApiResponse(responseCode = "200", description = "Удаление прошло успешно")
+    })
+    @DeleteMapping("/admin/colleagues")
+    public ResponseEntity<ColleagueResponse> deleteColleague(@RequestParam String email) {
+        colleagueService.deleteColleagueByEmail(email);
+        return ResponseEntity.ok().build();
+    }
 
     /**
      * Можно валидировать через код запроса, а можно через TRUE/FALSE
