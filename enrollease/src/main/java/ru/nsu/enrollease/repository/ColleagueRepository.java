@@ -1,15 +1,17 @@
 package ru.nsu.enrollease.repository;
 
-import java.util.List;
+import java.util.Optional;
 import org.springframework.data.mongodb.repository.MongoRepository;
+import org.springframework.data.mongodb.repository.Query;
 import org.springframework.stereotype.Repository;
-import ru.nsu.enrollease.model.Applicant;
 import ru.nsu.enrollease.model.Colleague;
 
+@Repository
 public interface ColleagueRepository extends MongoRepository<Colleague, String> {
 
     // You can define custom queries here if needed
-    Colleague findByEmail(String email);
+    Optional<Colleague> findByEmail(String email);
 
     boolean existsByEmail(String email);
+    public void deleteById (String email);
 }

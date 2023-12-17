@@ -12,7 +12,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import ru.nsu.enrollease.dto.response.GetAllApplicantsResponse;
 import ru.nsu.enrollease.service.ApplicantService;
-import ru.nsu.enrollease.service.ColleagueService;
 
 @RestController
 @RequestMapping("/applicants")
@@ -20,9 +19,6 @@ import ru.nsu.enrollease.service.ColleagueService;
 public class ApplicantController {
 
     private final ApplicantService applicantService;
-
-    //    public void updateDataOrCreateOne()
-    private final ColleagueService colleagueService;
 
     @Operation(summary = "Получить список всех абитуриентов.")
     @ApiResponses(value = {
@@ -44,6 +40,6 @@ public class ApplicantController {
         })})
     @GetMapping("is_exists")
     public boolean isExists(@RequestParam("primaryKey(Снилс)") String primaryKey) {
-        return colleagueService.isAllowed(primaryKey);
+        return applicantService.isExists(primaryKey);
     }
 }

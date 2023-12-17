@@ -1,7 +1,6 @@
 package ru.nsu.enrollease.service;
 
 import java.util.List;
-import java.util.Map;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -15,13 +14,14 @@ public class ApplicantService {
 
     private final ApplicantRepository applicantRepository;
 
+    @Transactional
     public List<Applicant> getAllApplicants() {
         return applicantRepository.findAll();
     }
 
     @Transactional
-    public boolean isExists(@NonNull String primaryKey) {
-        return applicantRepository.existsByФизическоеЛицоСНИЛС(primaryKey);
+    public boolean isExists(@NonNull String iian) {
+        return applicantRepository.existsByФизическоеЛицоСНИЛС(iian);
     }
 
 }

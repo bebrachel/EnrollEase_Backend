@@ -8,17 +8,15 @@ import lombok.NonNull;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
-@Document(collection = "colleagues")
+@Document(collection = "roles")
 @AllArgsConstructor
-@Data
 @NoArgsConstructor
-public class Colleague {
+@Data
+public class ColleagueRole {
 
     @Id
     @NonNull
-    private String email;
+    private String name;
     @NonNull
-    private List<ColleagueRole> roles;
-    private boolean enabled;
-    private boolean tokenExpired;
+    private List<RolePrivilege> privileges;
 }
