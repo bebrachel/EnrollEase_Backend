@@ -3,7 +3,7 @@ from ..Google import create_service
 
 def folder_create(service, name):
     file_meta = {
-        'name': f"ПриемнаяКампания2023/{name}",
+        'name': f"{name}",
         'mimeType': 'application/vnd.google-apps.folder',
         'parents': ['1l6hMMlzH17LWlxhWVPu3FTg4612dT_S4']
     }
