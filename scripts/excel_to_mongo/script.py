@@ -6,7 +6,7 @@ def export_from_excel(filename):
     data_frame.dropna(axis=1, how='all', inplace=True)
 
     # Подключение к MongoDB
-    client = MongoClient("mongodb://mongodb/",
+    client = MongoClient("mongodb://mongodb",
                          27017)  # замените на свои параметры подключения
     db = client['proj']  # замените на название вашей базы данных
     collection = db['applicants']  # замените на название вашей коллекции
@@ -16,8 +16,7 @@ def export_from_excel(filename):
 
     s = ""
     with open('../googler/send_message/templates/АнкетаГуглдискИнструкция.txt') as openfileobject:
-        for line in openfileobject:
-            s += line
+        s = openfileobject.read()
     # Импорт данных в MongoDB
     for _, row in data_frame.iterrows():
         document = row.to_dict()
@@ -25,8 +24,7 @@ def export_from_excel(filename):
         for i in document:
             if str(document[i]) == 'nan' or i == primary_key:
                 c_d.pop(i)
-        doc = {'_id': document[primary_key], 'data': c_d}
-        doc['status'] = 'Подано заявление'
+        doc = {'_id': document[primary_key], 'data': c_d, 'status': 'Подано заявление'}
         result = collection.update_one({'_id': doc['_id']}, {"$set": doc}, upsert=True).raw_result
         if not result.get('updatedExisting'):
             mail = document['Email']
@@ -40,6 +38,7 @@ def export_from_excel(filename):
 if __name__ == '__main__':
     import sys
 
+    sys.path.append('/scripts')
     args = sys.argv
     print("Import has started.")
     export_from_excel(args[1])

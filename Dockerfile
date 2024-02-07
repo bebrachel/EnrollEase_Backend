@@ -21,7 +21,7 @@ RUN pip3 install -r ./scripts/googler/requirements.txt
 RUN chmod +x ./scripts/excel_to_mongo/trigger.sh && \
     chmod +x ./boot.sh
 
-EXPOSE 8080
+EXPOSE 8088
 
 ARG JAR_FILE=enrollease/target/*.jar
 ADD ${JAR_FILE} app.jar

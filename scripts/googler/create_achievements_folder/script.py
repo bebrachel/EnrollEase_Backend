@@ -2,8 +2,8 @@ from ..Google import *
 
 
 def create(folder_name, user_gmail):
-    folder_id = folder_create(GOOGLE_DRIVE_SERVICE, folder_name, INDIVIDUAL_ACHIEVEMENTS_FOLDER_ID)["id"]
-    give_user_permission(GOOGLE_DRIVE_SERVICE, folder_id, user_gmail)
+    folder_id = folder_create(folder_name, INDIVIDUAL_ACHIEVEMENTS_FOLDER_ID)["id"]
+    give_user_permission(folder_id, user_gmail)
 
 
 if __name__ == '__main__':
