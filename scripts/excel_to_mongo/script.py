@@ -6,7 +6,7 @@ def export_from_excel(filename):
     data_frame.dropna(axis=1, how='all', inplace=True)
 
     # Подключение к MongoDB
-    client = MongoClient("",
+    client = MongoClient("mongodb://mongodb/",
                          27017)  # замените на свои параметры подключения
     db = client['proj']  # замените на название вашей базы данных
     collection = db['applicants']  # замените на название вашей коллекции
@@ -31,11 +31,10 @@ def export_from_excel(filename):
         if not result.get('updatedExisting'):
             mail = document['Email']
             name = document['ФИО']
-            import os
-            os.system(
-                f'cd .. && python3 -m googler.create_achievements_folder.script "{name}" "{mail}"')
-            os.system(
-                f'cd .. && python3 -m googler.send_message.script "НГУ Магистратура" "{s}" "{[mail]}"')
+            import googler.create_achievements_folder.script
+            import googler.send_message.script
+            googler.create_achievements_folder.script.create(name, mail)
+            googler.send_message.script.gmail_create("НГУ Магистратура", s, [mail])
 
 
 if __name__ == '__main__':

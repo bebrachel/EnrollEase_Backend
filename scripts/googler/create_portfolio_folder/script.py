@@ -1,11 +1,6 @@
 from ..Google import *
 
 
-def create(folder_name, user_gmail):
-    folder_id = folder_create(GOOGLE_DRIVE_SERVICE, folder_name, INDIVIDUAL_ACHIEVEMENTS_FOLDER_ID)["id"]
-    give_user_permission(GOOGLE_DRIVE_SERVICE, folder_id, user_gmail)
-
-
 if __name__ == '__main__':
     import sys
 
@@ -13,6 +8,8 @@ if __name__ == '__main__':
     if len(args) != 2:
         print('Usage: python script.py <folder_name> <user_gmail_address>')
         exit(1)
+    service = create_service('drive', 'v3', ['https://www.googleapis.com/auth/drive'])
     folder_name = args[0]
     user_gmail = args[1]
-    create(folder_name, user_gmail)
+    folder_id = folder_create(service, folder_name, PORTFOLIO_FOLDER_ID)["id"]
+    give_user_permission(service, folder_id, user_gmail)

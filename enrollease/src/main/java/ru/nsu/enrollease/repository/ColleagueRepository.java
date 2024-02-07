@@ -13,5 +13,6 @@ public interface ColleagueRepository extends MongoRepository<Colleague, String> 
     Optional<Colleague> findByEmail(String email);
 
     boolean existsByEmail(String email);
-    public void deleteById (String email);
+    void deleteById(String email);
+    void deleteByEmail(String email);
 }
