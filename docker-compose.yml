@@ -1,0 +1,27 @@
+version: '3.3'
+services:
+  app:
+    container_name: "backend"
+    build:
+      context: .
+    ports:
+      - "8088:8088"
+    depends_on:
+      - mongo
+    environment:
+      MONGO_URI: mongodb://localhost:27017
+      ADMIN_EMAIL: gudvin0203@gmail.com
+
+  mongo:
+    image: mongo:latest
+    container_name: "mongodb"
+#    environment:
+#      MONGO_INITDB_ROOT_USERNAME: nocarend
+#      MONGO_INITDB_ROOT_PASSWORD: 7754433
+    ports:
+      - "27018:27017"
+    volumes:
+      - mongodbdata:/data/db
+
+volumes:
+  mongodbdata:
