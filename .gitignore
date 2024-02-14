@@ -6,4 +6,3 @@ scripts/googler/tokens/token_gmail_v1_httpswww.googleapis.comauthgmail.compose.p
 scripts/googler/tokens/token_gmail_v1_httpswww.googleapis.comauthgmail.readonly.pickle
 scripts/excel_to_mongo/xlsx/example_table_1.xlsx
 enrollease/src/main/resources/application.properties
-.idea
