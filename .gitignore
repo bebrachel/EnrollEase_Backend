@@ -1,0 +1,8 @@
+
+scripts/googler/credentials.json
+scripts/googler/send_message/templates/АнкетаГуглдискИнструкция.txt
+scripts/googler/tokens/token_drive_v3_httpswww.googleapis.comauthdrive.pickle
+scripts/googler/tokens/token_gmail_v1_httpswww.googleapis.comauthgmail.compose.pickle
+scripts/googler/tokens/token_gmail_v1_httpswww.googleapis.comauthgmail.readonly.pickle
+scripts/excel_to_mongo/xlsx/example_table_1.xlsx
+enrollease/src/main/resources/application.properties

@@ -22,5 +22,7 @@ RUN chmod +x ./scripts/excel_to_mongo/trigger.sh && \
     chmod +x ./boot.sh
 
 EXPOSE 8088
+
 COPY ./app.jar ./app.jar
+
 ENTRYPOINT ["./boot.sh"]
