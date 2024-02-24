@@ -4,7 +4,7 @@ ENV TZ=Asia/Novosibirsk
 ENV DEBIAN_FRONTEND=noninteractive
 
 
-RUN apt-get update
+RUN apt-get update && apt-get install -y cron
 #apt-get install -y openjdk-17-jre-headless && \
 RUN apt-get install -y python3-pip
 RUN apt-get install -y inotify-tools
@@ -19,10 +19,18 @@ COPY ./scripts ./scripts
 RUN pip3 install -r ./scripts/googler/requirements.txt
 COPY ./boot.sh ./
 RUN chmod +x ./scripts/excel_to_mongo/trigger.sh && \
-    chmod +x ./boot.sh
+    chmod +x ./boot.sh && \
+    chmod +x /scripts/googler/folder_observation.py
+COPY cron_folder_observ /etc/cron.d/mycron
+RUN chmod 0744 /etc/cron.d/mycron
+RUN crontab /etc/cron.d/mycron
+RUN touch /var/log/cron.log
+RUN cron
+
+#RUN #echo "* * * * * root python3 /scripts/googler/folder_observation.py >> /var/log/daily-backup.log 2>&1" >> /etc/crontab
+# RUN #cron
+
 
 EXPOSE 8088
-
-COPY ./app.jar ./app.jar
-
-ENTRYPOINT ["./boot.sh"]
+COPY ./enrollease.jar ./enrollease.jar
+ENTRYPOINT ["/bin/sh", "-c", "cron && ./boot.sh"]
