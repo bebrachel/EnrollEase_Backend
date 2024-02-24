@@ -11,6 +11,12 @@
   running `__main__` from `scripts/googler/Google.py`.
 - You need to replace `scripts/googler/credentials.json` with yours obtained from Google Cloud Console.
 
+## Spring profiles
+
+In `boot.sh` you can choose one of available profiles:
+- `prod` - setting up services with admin profile
+- `test_data` - the same as `prod` but with pre-created data
+
 ## Deploy
 
 We need the jar file of the application. It could be done with `mvn clean install`.  
