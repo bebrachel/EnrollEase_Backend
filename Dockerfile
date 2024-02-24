@@ -26,6 +26,10 @@ COPY cron_observ /etc/cron.d/mycron
 RUN chmod 0744 /etc/cron.d/mycron
 RUN crontab /etc/cron.d/mycron
 RUN touch /var/log/cron_folder.log
+    chmod +x /scripts/googler/folder_observation.py
+COPY cron_folder_observ /etc/cron.d/mycron
+RUN chmod 0744 /etc/cron.d/mycron
+RUN crontab /etc/cron.d/mycron
 RUN touch /var/log/cron.log
 RUN cron
 
