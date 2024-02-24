@@ -10,16 +10,28 @@ from email.message import EmailMessage
 INDIVIDUAL_ACHIEVEMENTS_FOLDER_ID = ['1dml8sdNr5Bh_oJeU9-gxWHkWHYpuMjCw']
 PORTFOLIO_FOLDER_ID = ['1o4sRpoNdq8eL06tZAKnJRe5jjWRxb17t']
 
+PORTFOLIO_FORM_SHEET_ID = '1grpMDJUQCX7NTd5uTg3ONHsb-rseZiqL5tk5FEWHppM/edit?usp=sharing'
+PORTFOLIO_FORM_SHEET_LIST_NAME = 'Ответы на форму (1)'
 
-def create_service(api_name, api_version, *scopes):
+
+def create_service(api_name, api_version, *scopes, port=8083):
     API_SERVICE_NAME = api_name
     API_VERSION = api_version
     SCOPES = [scope for scope in scopes[0]]
-    CLIENT_SECRET_FILE = '/scripts/googler/credentials.json'
+
+    import platform
+    os_name = platform.system()
+
+    if os_name == "Windows":
+        TOKEN_FILE = '.'
+        CLIENT_SECRET_FILE = 'credentials.json'
+    else:
+        TOKEN_FILE = f'/scripts/googler'
+        CLIENT_SECRET_FILE = '/scripts/googler/credentials.json'
 
     cred = None
 
-    pickle_file = f'/scripts/googler/tokens/token_{API_SERVICE_NAME}_{API_VERSION}_{str("".join(SCOPES)).replace(":", "").replace("/", "")}.pickle'
+    pickle_file = f'{TOKEN_FILE}/tokens/token_{API_SERVICE_NAME}_{API_VERSION}_{str("".join(SCOPES)).replace(":", "").replace("/", "")}.pickle'
 
     if os.path.exists(pickle_file):
         with open(pickle_file, 'rb') as token:
@@ -30,7 +42,7 @@ def create_service(api_name, api_version, *scopes):
             cred.refresh(Request())
         else:
             flow = InstalledAppFlow.from_client_secrets_file(CLIENT_SECRET_FILE, SCOPES)
-            cred = flow.run_local_server(port=8083)
+            cred = flow.run_local_server(port=port)
 
         with open(pickle_file, 'wb') as token:
             pickle.dump(cred, token)
@@ -47,6 +59,12 @@ def create_service(api_name, api_version, *scopes):
 GOOGLE_DRIVE_SERVICE = create_service('drive', 'v3', ['https://www.googleapis.com/auth/drive'])
 GMAIL_SERVICE_COMPOSE = create_service('gmail', 'v1', ['https://www.googleapis.com/auth/gmail.compose'])
 GMAIL_SERVICE_READONLY = create_service('gmail', 'v1', ['https://www.googleapis.com/auth/gmail.readonly'])
+GOOGLE_DRIVE_SERVICE_METADATA = create_service('drive', 'v3',
+                                               ['https://www.googleapis.com/auth/drive.metadata.readonly'])
+
+
+# GOOGLE_FORM_AND_SHEETS_SERVICE = create_service('sheets', 'v4', ['https://www.googleapis.com/auth/documents',
+#                                                                  'https://www.googleapis.com/auth/drive'], 8086)
 
 
 def folder_create(name, parents):
@@ -142,3 +160,13 @@ def show_chatty_threads(companion):
                     print("-----")
     except HttpError as error:
         print(f"An error occurred: {error}")
+
+
+if __name__ == '__main__':  # temporally
+    GOOGLE_DRIVE_SERVICE = create_service('drive', 'v3', ['https://www.googleapis.com/auth/drive'])
+    GMAIL_SERVICE_COMPOSE = create_service('gmail', 'v1', ['https://www.googleapis.com/auth/gmail.compose'])
+    GMAIL_SERVICE_READONLY = create_service('gmail', 'v1', ['https://www.googleapis.com/auth/gmail.readonly'])
+    # GOOGLE_FORM_AND_SHEETS_SERVICE = create_service('sheets', 'v4', ['https://www.googleapis.com/auth/documents',
+    #                                                                  'https://www.googleapis.com/auth/drive'], 8086)
+    GOOGLE_DRIVE_SERVICE_METADATA = create_service('drive', 'v3',
+                                                   ['https://www.googleapis.com/auth/drive.metadata.readonly'])
