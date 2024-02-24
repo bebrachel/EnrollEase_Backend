@@ -10,9 +10,8 @@ from email.message import EmailMessage
 INDIVIDUAL_ACHIEVEMENTS_FOLDER_ID = ['1dml8sdNr5Bh_oJeU9-gxWHkWHYpuMjCw']
 PORTFOLIO_FOLDER_ID = ['1o4sRpoNdq8eL06tZAKnJRe5jjWRxb17t']
 
-PORTFOLIO_FORM_SHEET_ID = '1grpMDJUQCX7NTd5uTg3ONHsb-rseZiqL5tk5FEWHppM'
-PORTFOLIO_FORM_SHEET_LIST_NAME = 'Ответы на форму (2)'
-PORTFOLIO_DOC_TEMPLATE_ID = '1TW_RK9Eg4Lzj4_B34OssKkMDIm1od7lalafoazkRJco'
+PORTFOLIO_FORM_SHEET_ID = '1grpMDJUQCX7NTd5uTg3ONHsb-rseZiqL5tk5FEWHppM/edit?usp=sharing'
+PORTFOLIO_FORM_SHEET_LIST_NAME = 'Ответы на форму (1)'
 
 
 def create_service(api_name, api_version, *scopes, port=8083):
@@ -62,13 +61,7 @@ GOOGLE_DRIVE_SERVICE = create_service('drive', 'v3', ['https://www.googleapis.co
 GMAIL_SERVICE_COMPOSE = create_service('gmail', 'v1', ['https://www.googleapis.com/auth/gmail.compose'])
 GMAIL_SERVICE_READONLY = create_service('gmail', 'v1', ['https://www.googleapis.com/auth/gmail.readonly'])
 GOOGLE_DRIVE_SERVICE_METADATA = create_service('drive', 'v3',
-                                               ['https://www.googleapis.com/auth/drive.metadata.readonly',
-                                                'https://www.googleapis.com/auth/drive'])
-# 2 Michael's services, why these scopes idk
-GOOGLE_SHEETS_SERVICE = create_service('sheets', 'v4', ['https://www.googleapis.com/auth/documents',
-                                                        'https://www.googleapis.com/auth/drive'])
-GOOGLE_DOCS_SERVICE = create_service('docs', 'v1', ['https://www.googleapis.com/auth/documents',
-                                                    'https://www.googleapis.com/auth/drive'])
+                                               ['https://www.googleapis.com/auth/drive.metadata.readonly'])
 
 
 # GOOGLE_FORM_AND_SHEETS_SERVICE = create_service('sheets', 'v4', ['https://www.googleapis.com/auth/documents',
@@ -177,9 +170,4 @@ if __name__ == '__main__':  # temporally
     # GOOGLE_FORM_AND_SHEETS_SERVICE = create_service('sheets', 'v4', ['https://www.googleapis.com/auth/documents',
     #                                                                  'https://www.googleapis.com/auth/drive'], 8086)
     GOOGLE_DRIVE_SERVICE_METADATA = create_service('drive', 'v3',
-                                                   ['https://www.googleapis.com/auth/drive.metadata.readonly',
-                                                    'https://www.googleapis.com/auth/drive'])
-    GOOGLE_SHEETS_SERVICE = create_service('sheets', 'v4', ['https://www.googleapis.com/auth/documents',
-                                                            'https://www.googleapis.com/auth/drive'])
-    GOOGLE_DOCS_SERVICE = create_service('docs', 'v1', ['https://www.googleapis.com/auth/documents',
-                                                        'https://www.googleapis.com/auth/drive'])
+                                                   ['https://www.googleapis.com/auth/drive.metadata.readonly'])
