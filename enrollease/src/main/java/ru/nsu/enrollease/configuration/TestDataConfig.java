@@ -1,5 +1,6 @@
 package ru.nsu.enrollease.configuration;
 
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 import lombok.NonNull;
@@ -11,7 +12,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
 import org.springframework.core.annotation.Order;
 import org.springframework.transaction.annotation.Transactional;
-import ru.nsu.enrollease.dto.request.applicant_portfolio.ApplicantPortfolioRequest;
+import ru.nsu.enrollease.dto.request.ApplicantPortfolioRequest;
 import ru.nsu.enrollease.model.Applicant;
 import ru.nsu.enrollease.service.ApplicantPortfolioService;
 import ru.nsu.enrollease.service.ApplicantService;
@@ -45,23 +46,18 @@ public class TestDataConfig implements
         }
 
         applicantPortfolioService.createNewApplicant(
-            new ApplicantPortfolioRequest("123", "2923-11-10T17:00:00.000+00:00",
-                "16Nk2xWOys_UwhXxmWeQJw92SolHxKmPc",
-                "nocarend@gmail.com", "Niklas", "885"));
+            new ApplicantPortfolioRequest("123", new Date(1023, 11, 11), "nithing",
+                "nocarend@gmail.com", "Niklas"));
         applicantPortfolioService.createNewApplicant(
-            new ApplicantPortfolioRequest("234", "2923-11-10T17:00:00.000+00:00",
-                "1zUqws_acuMTOmRElW85JAz17sJh6l2Tc",
-                "no-nocarend@gmail.com", "Santa", "886"));
+            new ApplicantPortfolioRequest("234", new Date(1023, 10, 11), "somthing",
+                "no-nocarend@gmail.com", "Santa"));
         applicantPortfolioService.createNewApplicant(
-            new ApplicantPortfolioRequest("345", "2923-11-10T17:00:00.000+00:00",
-                "1gbXEyN_PZtXint9oWrkkuyGGaom_FG9M",
-                "carend@gmail.com", "Nux", "887"));
+            new ApplicantPortfolioRequest("345", new Date(1023, 9, 11), "anythinh",
+                "carend@gmail.com", "Nux"));
 
-        // it happens happens on startup via excel table
-
-//        applicantService.createNewApplicant(new Applicant("123", "good", Map.of("fav", "777")));
-//        applicantService.createNewApplicant(new Applicant("234", "bad", Map.of("no-gav", "546")));
-//        applicantService.createNewApplicant(new Applicant("345", "ugly", Map.of("gun", "pistol")));
+        applicantService.createNewApplicant(new Applicant("123", "good", Map.of("fav", "777")));
+        applicantService.createNewApplicant(new Applicant("234", "bad", Map.of("no-gav", "546")));
+        applicantService.createNewApplicant(new Applicant("345", "ugly", Map.of("gun", "pistol")));
 
         colleagueService.allowOrGiveRoles("o.pogibelnaya@g.nsu.ru",
             List.of(colleagueRoleService.getRole("HEAD_OF_COMMISSION")));

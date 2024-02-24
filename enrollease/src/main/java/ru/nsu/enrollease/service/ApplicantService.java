@@ -23,32 +23,13 @@ public class ApplicantService {
     }
 
     @Transactional
-    public Applicant getApplicant(@NonNull String iian) {
-        return applicantRepository.findById(iian).orElseThrow(NoSuchElementException::new);
-    }
-
-    @Transactional
-    public boolean exists(@NonNull String iian) {
+    public boolean isExists(@NonNull String iian) {
         return applicantRepository.existsByIian(iian);
     }
 
     @Transactional
-    public List<Applicant> deleteAll() {
-        var response = getAllApplicants();
-        applicantRepository.deleteAll();
-        return response;
-    }
-
-    @Transactional
-    public Applicant deleteById(@NonNull String iian) {
-        var response = getApplicant(iian);
-        applicantRepository.deleteById(iian);
-        return response;
-    }
-
-    @Transactional
     public Applicant createNewApplicant(@NonNull Applicant applicant) {
-        if (exists(applicant.getIian())) {
+        if (isExists(applicant.getIian())) {
             throw new IllegalArgumentException("Applicant with such iian is already created.");
         }
         log.info(applicant + "Was added");
