@@ -11,7 +11,8 @@ INDIVIDUAL_ACHIEVEMENTS_FOLDER_ID = ['1dml8sdNr5Bh_oJeU9-gxWHkWHYpuMjCw']
 PORTFOLIO_FOLDER_ID = ['1o4sRpoNdq8eL06tZAKnJRe5jjWRxb17t']
 
 PORTFOLIO_FORM_SHEET_ID = '1grpMDJUQCX7NTd5uTg3ONHsb-rseZiqL5tk5FEWHppM/edit?usp=sharing'
-PORTFOLIO_FORM_SHEET_LIST_NAME = 'Ответы на форму (1)'
+PORTFOLIO_FORM_SHEET_LIST_NAME = 'Ответы на форму'
+PORTFOLIO_DOC_TEMPLATE_ID = 'MYID'
 
 
 def create_service(api_name, api_version, *scopes, port=8083):
@@ -61,6 +62,11 @@ GMAIL_SERVICE_COMPOSE = create_service('gmail', 'v1', ['https://www.googleapis.c
 GMAIL_SERVICE_READONLY = create_service('gmail', 'v1', ['https://www.googleapis.com/auth/gmail.readonly'])
 GOOGLE_DRIVE_SERVICE_METADATA = create_service('drive', 'v3',
                                                ['https://www.googleapis.com/auth/drive.metadata.readonly'])
+# 2 Michael's services, why these scopes idk
+GOOGLE_SHEETS_SERVICE = create_service('sheets', 'v4', ['https://www.googleapis.com/auth/documents',
+                                                        'https://www.googleapis.com/auth/drive'])
+GOOGLE_DOCS_SERVICE = create_service('docs', 'v1', ['https://www.googleapis.com/auth/documents',
+                                                    'https://www.googleapis.com/auth/drive'])
 
 
 # GOOGLE_FORM_AND_SHEETS_SERVICE = create_service('sheets', 'v4', ['https://www.googleapis.com/auth/documents',
@@ -170,3 +176,7 @@ if __name__ == '__main__':  # temporally
     #                                                                  'https://www.googleapis.com/auth/drive'], 8086)
     GOOGLE_DRIVE_SERVICE_METADATA = create_service('drive', 'v3',
                                                    ['https://www.googleapis.com/auth/drive.metadata.readonly'])
+    GOOGLE_SHEETS_SERVICE = create_service('sheets', 'v4', ['https://www.googleapis.com/auth/documents',
+                                                            'https://www.googleapis.com/auth/drive'])
+    GOOGLE_DOCS_SERVICE = create_service('docs', 'v1', ['https://www.googleapis.com/auth/documents',
+                                                        'https://www.googleapis.com/auth/drive'])
