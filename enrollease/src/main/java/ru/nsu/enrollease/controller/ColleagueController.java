@@ -1,10 +1,13 @@
 package ru.nsu.enrollease.controller;
 
+import com.nimbusds.openid.connect.sdk.AuthenticationResponse;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -18,7 +21,6 @@ import ru.nsu.enrollease.dto.request.AllowOrGiveRolesRequest;
 import ru.nsu.enrollease.dto.response.AllowOrGiveRolesResponse;
 import ru.nsu.enrollease.dto.response.ColleagueResponse;
 import ru.nsu.enrollease.dto.response.GetAllColleaguesResponse;
-import ru.nsu.enrollease.model.Colleague;
 import ru.nsu.enrollease.service.ColleagueRoleService;
 import ru.nsu.enrollease.service.ColleagueService;
 
@@ -88,7 +90,13 @@ public class ColleagueController {
         })})
     @GetMapping("/colleagues")
     public GetAllColleaguesResponse findAllColleagues() {
-        return new GetAllColleaguesResponse(colleagueService.getAllColleagues());
+        return new GetAllColleaguesResponse(colleagueService.getAllColleagues().stream()
+            .map(i -> new ColleagueResponse(i.getEmail(), i.getRoles())).toList());
     }
 
+//    @PostMapping("/refresh")
+//    public AuthenticationResponse refreshToken(HttpServletRequest request,
+//        HttpServletResponse response) {
+//        return authenticationService.refreshToken(request, response);
+//    }
 }

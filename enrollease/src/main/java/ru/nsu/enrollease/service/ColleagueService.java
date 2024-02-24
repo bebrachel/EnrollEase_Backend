@@ -3,6 +3,7 @@ package ru.nsu.enrollease.service;
 import java.util.List;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.log4j.Log4j2;
 import org.springframework.stereotype.Service;
 
 import org.springframework.transaction.annotation.Transactional;
@@ -12,6 +13,7 @@ import ru.nsu.enrollease.repository.ColleagueRepository;
 
 @Service
 @RequiredArgsConstructor
+@Log4j2
 public class ColleagueService {
 
     private final ColleagueRepository colleagueRepository;
@@ -22,6 +24,7 @@ public class ColleagueService {
         user.setEmail(email);
         user.setRoles(roles);
         user.setEnabled(true);
+        log.info(user + "Was changed/added");
         return colleagueRepository.save(user);
     }
 

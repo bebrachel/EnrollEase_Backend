@@ -10,8 +10,8 @@ public interface ApplicantRepository extends MongoRepository<Applicant, String> 
 
     //    ApplicantRepository findByEmail(String email);
 //
-    @Query("{ 'ФизическоеЛицоСНИЛС': ?0 }")
+    @Query("{ iian: ?0 }")
     boolean existsByPrimaryKey(String fieldValue);
 
-    boolean existsByФизическоеЛицоСНИЛС(String value);
+    boolean existsByIian(String value);
 }

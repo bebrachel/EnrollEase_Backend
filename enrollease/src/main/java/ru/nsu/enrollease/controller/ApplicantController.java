@@ -28,7 +28,6 @@ public class ApplicantController {
         })})
     @GetMapping
     public GetAllApplicantsResponse getAllApplicants() {
-        System.out.println(applicantService.getAllApplicants());
         return new GetAllApplicantsResponse(applicantService.getAllApplicants());
     }
 
