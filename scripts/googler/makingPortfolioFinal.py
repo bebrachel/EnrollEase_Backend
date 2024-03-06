@@ -1,7 +1,7 @@
 from itertools import product
 
 from Google import folder_create, PORTFOLIO_FOLDER_ID, PORTFOLIO_FORM_SHEET_ID, PORTFOLIO_FORM_SHEET_LIST_NAME, \
-    PORTFOLIO_DOC_TEMPLATE_ID, GOOGLE_SHEETS_SERVICE, GOOGLE_DOCS_SERVICE, GOOGLE_DRIVE_SERVICE
+    PORTFOLIO_DOC_TEMPLATE_ID, GOOGLE_SHEETS_SERVICE, GOOGLE_DOCS_SERVICE, GOOGLE_DRIVE_SERVICE, give_user_permission
 
 flag_index = 19
 flag_symbol = '1'
@@ -88,6 +88,7 @@ def main():
             row_index = values.index(row) + 1  # Получаем индекс строки (нумерация с 1)
             # Обновляем значение флага в текущей строке:
             update_flag_in_sheet(row_index)
+            give_user_permission(folder_id, data.get('Электронная почта'))
 
 
 if __name__ == '__main__':

@@ -1,6 +1,7 @@
 package ru.nsu.enrollease.configuration;
 
 import java.util.List;
+import java.util.Map;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
@@ -11,7 +12,9 @@ import org.springframework.context.annotation.Profile;
 import org.springframework.core.annotation.Order;
 import org.springframework.transaction.annotation.Transactional;
 import ru.nsu.enrollease.dto.request.applicant_portfolio.ApplicantPortfolioRequest;
+import ru.nsu.enrollease.model.Applicant;
 import ru.nsu.enrollease.service.ApplicantPortfolioService;
+import ru.nsu.enrollease.service.ApplicantService;
 import ru.nsu.enrollease.service.ColleagueRoleService;
 import ru.nsu.enrollease.service.ColleagueService;
 
@@ -27,7 +30,7 @@ public class TestDataConfig implements
 
     private final ApplicantPortfolioService applicantPortfolioService;
 
-//    private final ApplicantService applicantService;
+    private final ApplicantService applicantService;
     private final ColleagueRoleService colleagueRoleService;
 
     private final ColleagueService colleagueService;
