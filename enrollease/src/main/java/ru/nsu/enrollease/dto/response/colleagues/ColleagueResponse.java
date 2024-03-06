@@ -1,4 +1,4 @@
-package ru.nsu.enrollease.dto.response;
+package ru.nsu.enrollease.dto.response.colleagues;
 
 import java.util.List;
 import lombok.NonNull;

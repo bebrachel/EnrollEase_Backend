@@ -33,4 +33,8 @@ build/
 .vscode/
 
 src/main/resources/application-local.properties
-target
+#target
+.mvn/.gradle-enterprise/
+.idea
+gradle
+.gradle
