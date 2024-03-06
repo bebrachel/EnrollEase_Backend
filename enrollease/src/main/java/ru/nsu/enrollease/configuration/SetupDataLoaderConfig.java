@@ -12,7 +12,6 @@ import org.springframework.context.ApplicationListener;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
 import org.springframework.core.annotation.Order;
-import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 import ru.nsu.enrollease.model.ColleagueRole;
 import ru.nsu.enrollease.model.RolePrivilege;
@@ -28,7 +27,7 @@ import ru.nsu.enrollease.service.ColleagueService;
 public class SetupDataLoaderConfig implements
     ApplicationListener<ApplicationReadyEvent> {
 
-    @Value("${ADMIN_EMAIL}")
+    @Value("${ADMIN_EMAIL:gudvin0203@gmail.com}")
     private String adminEmail;
     boolean alreadySetup = false;
 

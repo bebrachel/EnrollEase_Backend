@@ -1,7 +1,6 @@
 package ru.nsu.enrollease.model;
 
 
-import java.util.Date;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NonNull;
@@ -22,13 +21,13 @@ public class ApplicantPortfolio {
     private String iian;
     //    @NonNull for now
     @NonNull
-    private Date folderCreationDate;
+    private String folderCreationDate;
     @NonNull
     private String folderId;
     @NonNull
-    private Status status; // it has to be enum
+    private Status status;
     @NonNull
-    private Date folderUpdatedAt;
+    private String folderUpdatedAt; //not a date because google gives string
     @NonNull
     private Integer rank;
     @NonNull
@@ -38,22 +37,24 @@ public class ApplicantPortfolio {
     @NonNull
     private String name;
 
+    @NonNull
+    private String phoneNumber;
     // for adding test data
-    public ApplicantPortfolio(String iian, Date date, String folderId, String email, String name) {
-        this.iian = iian;
-        if (rank < 0 || rank > 10) {
-            log.error("TRY TO SET UP WRONG PORTFOLIO RANK");
-            throw new AssertionError("Rank must be inside [0, 10]");
-        }
-        this.folderCreationDate = date;
-        this.folderId = folderId;
-        this.status = Status.PARTICIPANT;
-        this.folderUpdatedAt = date;
-        this.rank = 0;
-        this.commentaries = "";
-        this.email = email;
-        this.name = name;
-    }
+//    public ApplicantPortfolio(String iian, Date date, String folderId, String email, String name) {
+//        this.iian = iian;
+//        if (rank < 0 || rank > 10) {
+//            log.error("TRY TO SET UP WRONG PORTFOLIO RANK");
+//            throw new AssertionError("Rank must be inside [0, 10]");
+//        }
+//        this.folderCreationDate = date;
+//        this.folderId = folderId;
+//        this.status = Status.PARTICIPANT;
+//        this.folderUpdatedAt = date;
+//        this.rank = 0;
+//        this.commentaries = "";
+//        this.email = email;
+//        this.name = name;
+//    }
 
     public enum Status {
         PARTICIPANT,

@@ -3,7 +3,6 @@ package ru.nsu.enrollease.service;
 import java.util.ArrayList;
 import java.util.List;
 import lombok.AllArgsConstructor;
-import org.springframework.context.MessageSource;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.User;
@@ -22,10 +21,6 @@ import ru.nsu.enrollease.repository.ColleagueRoleRepository;
 public class MyUserDetailsService implements UserDetailsService {
 
     private final ru.nsu.enrollease.repository.ColleagueRepository colleagueRepository;
-
-    private final ColleagueService colleagueService;
-
-    private final MessageSource messages;
 
     private final ColleagueRoleRepository colleagueRoleRepository;
 

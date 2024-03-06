@@ -1,11 +1,11 @@
 package ru.nsu.enrollease.service;
 
 import java.util.List;
+import java.util.NoSuchElementException;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.stereotype.Service;
-
 import org.springframework.transaction.annotation.Transactional;
 import ru.nsu.enrollease.model.Colleague;
 import ru.nsu.enrollease.model.ColleagueRole;
@@ -38,7 +38,13 @@ public class ColleagueService {
         return colleagueRepository.findAll();
     }
 
-    public void deleteColleagueByEmail(@NonNull String email) {
+    public Colleague getColleague(@NonNull String email) {
+        return colleagueRepository.findById(email).orElseThrow(NoSuchElementException::new);
+    }
+
+    public Colleague deleteColleagueByEmail(@NonNull String email) {
+        var response = getColleague(email);
         colleagueRepository.deleteById(email);
+        return response;
     }
 }

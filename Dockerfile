@@ -20,10 +20,12 @@ RUN pip3 install -r ./scripts/googler/requirements.txt
 COPY ./boot.sh ./
 RUN chmod +x ./scripts/excel_to_mongo/trigger.sh && \
     chmod +x ./boot.sh && \
-    chmod +x /scripts/googler/folder_observation.py
-COPY cron_folder_observ /etc/cron.d/mycron
+    chmod +x /scripts/googler/folder_observation.py && \
+    chmod +x /scripts/googler/makingPortfolioFinal.py
+COPY cron_observ /etc/cron.d/mycron
 RUN chmod 0744 /etc/cron.d/mycron
 RUN crontab /etc/cron.d/mycron
+RUN touch /var/log/cron_folder.log
 RUN touch /var/log/cron.log
 RUN cron
 

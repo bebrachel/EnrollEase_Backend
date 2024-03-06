@@ -1,1 +1,0 @@
-* * * * * python3 /scripts/googler/folder_observation.py >> /var/log/cron.log 2>&1
