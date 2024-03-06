@@ -1,12 +1,13 @@
 package ru.nsu.enrollease.service;
 
 import java.util.List;
+import java.util.NoSuchElementException;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import ru.nsu.enrollease.dto.request.ApplicantPortfolioRequest;
+import ru.nsu.enrollease.dto.request.applicant_portfolio.ApplicantPortfolioRequest;
 import ru.nsu.enrollease.model.ApplicantPortfolio;
 import ru.nsu.enrollease.model.ApplicantPortfolio.Status;
 import ru.nsu.enrollease.repository.ApplicantPortfolioRepository;
@@ -34,7 +35,8 @@ public class ApplicantPortfolioService {
                 0,
                 "",
                 applicantPortfolioRequest.email(),
-                applicantPortfolioRequest.name()));
+                applicantPortfolioRequest.name(),
+                applicantPortfolioRequest.phoneNumber()));
         log.info(applicant + " Was added");
         return applicant;
     }
@@ -45,12 +47,17 @@ public class ApplicantPortfolioService {
     }
 
     @Transactional
+    public ApplicantPortfolio getApplicant(@NonNull String iian) {
+        return applicantPortfolioRepository.findById(iian).orElseThrow(NoSuchElementException::new);
+    }
+
+    @Transactional
     public boolean isExists(@NonNull String iian) {
         return applicantPortfolioRepository.existsByIian(iian);
     }
 
     @Transactional
-    public String setParams(@NonNull String iian, String commentary, Status status, Integer rank) {
+    public ApplicantPortfolio setParams(@NonNull String iian, String commentary, Status status, Integer rank) {
         ApplicantPortfolio applicantPortfolio =
             applicantPortfolioRepository.findByIian(iian);
         if (applicantPortfolio != null) {
@@ -63,22 +70,24 @@ public class ApplicantPortfolioService {
             if (rank != null) {
                 applicantPortfolio.setRank(rank);
             }
-            return applicantPortfolioRepository.save(applicantPortfolio).getCommentaries();
+            return applicantPortfolioRepository.save(applicantPortfolio);
         }
         throw new IllegalArgumentException("Applicant with this iian does not exist");
     }
 
     @Transactional
-    public ApplicantPortfolio deleteApplicantPortfolio(String primaryKey) {
+    public ApplicantPortfolio deleteById(String primaryKey) {
         if (!isExists(primaryKey)) {
             throw new IllegalArgumentException("Applicant with this iian does not exist");
         }
         return applicantPortfolioRepository.deleteByIian(primaryKey);
     }
 
-//    @Transactional
-//    public ApplicantPortfolio findApplicantPortfolioByIian(@NonNull String iian){
-//        return applicantPortfolioRepository.findByФизическоеЛицоСНИЛС(iian);
-//    }
+    @Transactional
+    public List<ApplicantPortfolio> deleteAll() {
+        var response = getAllApplicants();
+        applicantPortfolioRepository.deleteAll();
+        return response;
+    }
 
 }

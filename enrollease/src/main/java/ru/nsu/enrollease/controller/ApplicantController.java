@@ -32,8 +32,14 @@ public class ApplicantController {
             @Schema(implementation = ListApplicantResponse.class))
         })})
     @GetMapping
-    public GetAllApplicantsResponse getAllApplicants() {
-        return new GetAllApplicantsResponse(applicantService.getAllApplicants());
+    public ListApplicantResponse getApplicants(@RequestParam(required = false) String iian) {
+        if (iian != null) {
+            return new ListApplicantResponse(
+                Stream.of(applicantService.getApplicant(iian)).map(ApplicantResponse::new)
+                    .toList());
+        }
+        return new ListApplicantResponse(applicantService.getAllApplicants().stream().map(
+            ApplicantResponse::new).toList());
     }
 
     @Operation(summary = "Проверить СНИЛС абитуриента на его существование.")
