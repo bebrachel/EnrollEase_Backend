@@ -3,12 +3,13 @@ import base64
 import os
 from googleapiclient.errors import HttpError
 from google_auth_oauthlib.flow import InstalledAppFlow
-from googleapiclient.discovery import build
+from googleapiclient.discovery import build, Resource
 from google.auth.transport.requests import Request
 from email.message import EmailMessage
 
 INDIVIDUAL_ACHIEVEMENTS_FOLDER_ID = ['1dml8sdNr5Bh_oJeU9-gxWHkWHYpuMjCw']
 PORTFOLIO_FOLDER_ID = ['1o4sRpoNdq8eL06tZAKnJRe5jjWRxb17t']
+COMMON_FOLDER_ID = ['1l6hMMlzH17LWlxhWVPu3FTg4612dT_S4']
 
 PORTFOLIO_FORM_SHEET_ID = '1grpMDJUQCX7NTd5uTg3ONHsb-rseZiqL5tk5FEWHppM'
 PORTFOLIO_FORM_SHEET_LIST_NAME = 'Ответы на форму (2)'
@@ -58,17 +59,31 @@ def create_service(api_name, api_version, *scopes, port=8083):
         return None
 
 
-GOOGLE_DRIVE_SERVICE = create_service('drive', 'v3', ['https://www.googleapis.com/auth/drive'])
-GMAIL_SERVICE_COMPOSE = create_service('gmail', 'v1', ['https://www.googleapis.com/auth/gmail.compose'])
-GMAIL_SERVICE_READONLY = create_service('gmail', 'v1', ['https://www.googleapis.com/auth/gmail.readonly'])
-GOOGLE_DRIVE_SERVICE_METADATA = create_service('drive', 'v3',
-                                               ['https://www.googleapis.com/auth/drive.metadata.readonly',
-                                                'https://www.googleapis.com/auth/drive'])
-# 2 Michael's services, why these scopes idk
-GOOGLE_SHEETS_SERVICE = create_service('sheets', 'v4', ['https://www.googleapis.com/auth/documents',
-                                                        'https://www.googleapis.com/auth/drive'])
-GOOGLE_DOCS_SERVICE = create_service('docs', 'v1', ['https://www.googleapis.com/auth/documents',
+GOOGLE_DRIVE_SERVICE: Resource
+GMAIL_SERVICE_COMPOSE: Resource
+GMAIL_SERVICE_READONLY: Resource
+GOOGLE_DRIVE_SERVICE_METADATA: Resource
+GOOGLE_SHEETS_AND_BACKUPS_SERVICE: Resource
+GOOGLE_DOCS_SERVICE: Resource
+
+
+def load_services():
+    global GOOGLE_DRIVE_SERVICE, GMAIL_SERVICE_COMPOSE, GMAIL_SERVICE_READONLY, GOOGLE_DRIVE_SERVICE_METADATA, GOOGLE_SHEETS_AND_BACKUPS_SERVICE, GOOGLE_DOCS_SERVICE
+    GOOGLE_DRIVE_SERVICE = create_service('drive', 'v3', ['https://www.googleapis.com/auth/drive'])
+    GMAIL_SERVICE_COMPOSE = create_service('gmail', 'v1', ['https://www.googleapis.com/auth/gmail.compose'])
+    GMAIL_SERVICE_READONLY = create_service('gmail', 'v1', ['https://www.googleapis.com/auth/gmail.readonly'])
+    # GOOGLE_FORM_AND_SHEETS_SERVICE = create_service('sheets', 'v4', ['https://www.googleapis.com/auth/documents',
+    #                                                                  'https://www.googleapis.com/auth/drive'], 8086)
+    GOOGLE_DRIVE_SERVICE_METADATA = create_service('drive', 'v3',
+                                                   ['https://www.googleapis.com/auth/drive.metadata.readonly',
                                                     'https://www.googleapis.com/auth/drive'])
+    GOOGLE_SHEETS_AND_BACKUPS_SERVICE = create_service('sheets', 'v4', ['https://www.googleapis.com/auth/documents',
+                                                                        'https://www.googleapis.com/auth/drive'])
+    GOOGLE_DOCS_SERVICE = create_service('docs', 'v1', ['https://www.googleapis.com/auth/documents',
+                                                        'https://www.googleapis.com/auth/drive'])
+
+
+load_services()
 
 
 # GOOGLE_FORM_AND_SHEETS_SERVICE = create_service('sheets', 'v4', ['https://www.googleapis.com/auth/documents',
@@ -170,16 +185,11 @@ def show_chatty_threads(companion):
         print(f"An error occurred: {error}")
 
 
+DEFAULT_GOOGLE_FOLDER_PATH = "https://drive.google.com/drive/folders/"
+
 if __name__ == '__main__':  # temporally
-    GOOGLE_DRIVE_SERVICE = create_service('drive', 'v3', ['https://www.googleapis.com/auth/drive'])
-    GMAIL_SERVICE_COMPOSE = create_service('gmail', 'v1', ['https://www.googleapis.com/auth/gmail.compose'])
-    GMAIL_SERVICE_READONLY = create_service('gmail', 'v1', ['https://www.googleapis.com/auth/gmail.readonly'])
-    # GOOGLE_FORM_AND_SHEETS_SERVICE = create_service('sheets', 'v4', ['https://www.googleapis.com/auth/documents',
-    #                                                                  'https://www.googleapis.com/auth/drive'], 8086)
-    GOOGLE_DRIVE_SERVICE_METADATA = create_service('drive', 'v3',
-                                                   ['https://www.googleapis.com/auth/drive.metadata.readonly',
-                                                    'https://www.googleapis.com/auth/drive'])
-    GOOGLE_SHEETS_SERVICE = create_service('sheets', 'v4', ['https://www.googleapis.com/auth/documents',
-                                                            'https://www.googleapis.com/auth/drive'])
-    GOOGLE_DOCS_SERVICE = create_service('docs', 'v1', ['https://www.googleapis.com/auth/documents',
-                                                        'https://www.googleapis.com/auth/drive'])
+    for i in range(60):
+        try:
+            load_services()
+        except Exception as e:
+            continue
