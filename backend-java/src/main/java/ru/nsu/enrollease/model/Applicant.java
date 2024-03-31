@@ -18,7 +18,7 @@ public class Applicant {
     @NonNull
     private String iian;
     //    @NonNull for now
-    private String status;
+    private Status status;
     @NonNull
     private Map<String, Object> data;
 
