@@ -1,3 +1,4 @@
 googler/tokens
 *.txt
 *.json
+**/venv
