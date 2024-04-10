@@ -14,6 +14,7 @@ COMMON_FOLDER_ID = ['1l6hMMlzH17LWlxhWVPu3FTg4612dT_S4']
 PORTFOLIO_FORM_SHEET_ID = '1grpMDJUQCX7NTd5uTg3ONHsb-rseZiqL5tk5FEWHppM'
 PORTFOLIO_FORM_SHEET_LIST_NAME = 'Ответы на форму (2)'
 PORTFOLIO_DOC_TEMPLATE_ID = '1TW_RK9Eg4Lzj4_B34OssKkMDIm1od7lalafoazkRJco'
+PORTFOLIO_SERTIFICATES_FOLDER_ID = "19WPCmOeRkr52M0VBKRRJbBf6Krehh_ac"
 
 
 def create_service(api_name, api_version, *scopes, port=8083):
@@ -65,10 +66,10 @@ GMAIL_SERVICE_READONLY: Resource
 GOOGLE_DRIVE_SERVICE_METADATA: Resource
 GOOGLE_SHEETS_AND_BACKUPS_SERVICE: Resource
 GOOGLE_DOCS_SERVICE: Resource
-
+GOOGLE_GEN_SERTIFICATES: Resource
 
 def load_services():
-    global GOOGLE_DRIVE_SERVICE, GMAIL_SERVICE_COMPOSE, GMAIL_SERVICE_READONLY, GOOGLE_DRIVE_SERVICE_METADATA, GOOGLE_SHEETS_AND_BACKUPS_SERVICE, GOOGLE_DOCS_SERVICE
+    global GOOGLE_DRIVE_SERVICE, GMAIL_SERVICE_COMPOSE, GMAIL_SERVICE_READONLY, GOOGLE_DRIVE_SERVICE_METADATA, GOOGLE_SHEETS_AND_BACKUPS_SERVICE, GOOGLE_DOCS_SERVICE, GOOGLE_GEN_SERTIFICATES
     GOOGLE_DRIVE_SERVICE = create_service('drive', 'v3', ['https://www.googleapis.com/auth/drive'])
     GMAIL_SERVICE_COMPOSE = create_service('gmail', 'v1', ['https://www.googleapis.com/auth/gmail.compose'])
     GMAIL_SERVICE_READONLY = create_service('gmail', 'v1', ['https://www.googleapis.com/auth/gmail.readonly'])
@@ -80,6 +81,8 @@ def load_services():
     GOOGLE_SHEETS_AND_BACKUPS_SERVICE = create_service('sheets', 'v4', ['https://www.googleapis.com/auth/documents',
                                                                         'https://www.googleapis.com/auth/drive'])
     GOOGLE_DOCS_SERVICE = create_service('docs', 'v1', ['https://www.googleapis.com/auth/documents',
+                                                        'https://www.googleapis.com/auth/drive'])
+    GOOGLE_GEN_SERTIFICATES = create_service('drive', 'v3', ['https://www.googleapis.com/auth/documents',
                                                         'https://www.googleapis.com/auth/drive'])
 
 
@@ -99,7 +102,7 @@ def folder_create(name, parents):
     return GOOGLE_DRIVE_SERVICE_METADATA.files().create(body=file_meta, fields='id, createdTime').execute()
 
 
-def give_user_permission(file_id, user_address):
+def give_user_permission(file_id, user_address, role='writer', updated=False):
     """
     на почту автоматически приходит уведомленме
     :param user_address:
@@ -108,11 +111,22 @@ def give_user_permission(file_id, user_address):
     """
     permission = {
         'type': 'user',
-        'role': 'writer',
+        'role': role,
         'emailAddress': user_address,  # Please set your email of Google account.
     }
-    GOOGLE_DRIVE_SERVICE.permissions().create(fileId=file_id, body=permission).execute()
-
+    if not updated:
+        GOOGLE_DRIVE_SERVICE.permissions().create(fileId=file_id, body=permission).execute()
+    else:
+        permissions = GOOGLE_DRIVE_SERVICE.permissions().list(fileId=file_id, fields='permissions(id, emailAddress)').execute()
+        for p in permissions.get('permissions', []):
+            # Check if the current permission corresponds to the user of interest
+            if p.get('emailAddress') == user_address:
+                permission_id = p.get('id')
+                # Update the permission from writer to reader
+                new_permission = {'role': role}
+                GOOGLE_DRIVE_SERVICE.permissions().update(
+                    fileId=file_id, permissionId=permission_id, body=new_permission).execute()
+                return
 
 def gmail_create(subject, content, recipients):
     try:
