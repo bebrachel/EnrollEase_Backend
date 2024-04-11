@@ -1,10 +1,17 @@
+import os
+import shutil
+from docx import Document
+from docx.shared import Pt
 from itertools import product
+from googleapiclient.http import MediaFileUpload
 
 from Google import folder_create, PORTFOLIO_FOLDER_ID, PORTFOLIO_FORM_SHEET_ID, PORTFOLIO_FORM_SHEET_LIST_NAME, \
     PORTFOLIO_DOC_TEMPLATE_ID, GOOGLE_SHEETS_SERVICE, GOOGLE_DOCS_SERVICE, GOOGLE_DRIVE_SERVICE, give_user_permission
 
-flag_index = 19
-flag_symbol = '1'
+flag_index = 26
+flag_symbol = 'Z'
+
+PORTFOLIO_TEMPLATE_FILE_PATH = "/scripts/googler/portfolio_making/portfolio_template_2024.docx"
 
 
 def get_google_sheets_data():
@@ -12,55 +19,7 @@ def get_google_sheets_data():
     result = GOOGLE_SHEETS_SERVICE.spreadsheets().values().get(
         spreadsheetId=PORTFOLIO_FORM_SHEET_ID, range=PORTFOLIO_FORM_SHEET_LIST_NAME).execute()
     values = result.get('values', [])
-    # print(values)
     return values
-
-
-def update_portfolio_with_data(data, portfolio_id):
-    # Получаем содержимое документа:
-    document = GOOGLE_DOCS_SERVICE.documents().get(documentId=portfolio_id).execute()
-    content = document['body']['content']
-
-    # Заменяем ключи в тексте на значения из словаря:
-    for row_dict, paragraph in product(data, content):
-        if 'paragraph' in paragraph:
-            elements = paragraph['paragraph']['elements']
-            for element in elements:
-                if 'textRun' in element:
-                    text = element['textRun']['content']
-                    for header, value in row_dict.items():
-                        if f'#{header}#' in text:
-                            text = text.replace(f'#{header}#', value)
-                            element['textRun']['content'] = text
-
-    # Обновляем содержимое документа:
-    requests = [
-        {
-            'replaceAllText': {
-                'containsText': {
-                    'text': f'#{header}#',
-                    'matchCase': True
-                },
-                'replaceText': value
-            }
-        } for row_dict in data for header, value in row_dict.items()
-    ]
-
-    GOOGLE_DOCS_SERVICE.documents().batchUpdate(documentId=portfolio_id, body={'requests': requests}).execute()
-    # print("Document updated successfully.") #для проверки работы
-
-
-def copy_doc_to_folder(destination_folder_id, document_id, copy_name):
-    # Создание метаданных для копии документа:
-    copy_metadata = {
-        'name': copy_name,
-        'parents': [destination_folder_id]
-    }
-
-    # Копирование документа в указанную папку:
-    copied_document = GOOGLE_DRIVE_SERVICE.files().copy(fileId=document_id, body=copy_metadata).execute()
-    # print(f'Документ успешно скопирован в папку с ID: {destination_folder_id}. Новый ID документа: {copied_document.get("id")}')
-    return copied_document.get("id")
 
 
 def update_flag_in_sheet(row_index):
@@ -72,24 +31,84 @@ def update_flag_in_sheet(row_index):
         valueInputOption='RAW', body=value_range_body).execute()
 
 
+def copy_docx_to_same_folder(original_file_path, copy_name):
+    try:
+        folder_path, file_name = os.path.split(original_file_path)
+        copy_file_path = os.path.join(folder_path, f"{copy_name}.docx")
+
+        shutil.copyfile(original_file_path, copy_file_path)
+        return copy_file_path
+    except Exception as e:
+        print(f"Error copying the file: {e}")
+        return None
+
+
+def upload_docx_to_google_drive(file_path, folder_id):
+
+    folder_path, file_name = os.path.split(file_path)
+    file_metadata = {
+        'name': os.path.basename(file_name),
+        'parents': [folder_id]
+    }
+    media = MediaFileUpload(file_path, mimetype='application/vnd.openxmlformats-officedocument.wordprocessingml.document')
+    file = GOOGLE_DRIVE_SERVICE.files().create(body=file_metadata, media_body=media, fields='id').execute()
+
+
+def make_portfolio(data, folder_id, applicant_name):
+    # Cоздаем копию шаблона локально:
+    portfolio_name = 'Портфолио ' + applicant_name
+    new_portfolio_file_path = copy_docx_to_same_folder(PORTFOLIO_TEMPLATE_FILE_PATH, portfolio_name)
+
+    # Заменяем ключи в копии шаблона:
+    # Замена в параграфах
+    doc = Document(new_portfolio_file_path)
+    for paragraph in doc.paragraphs:
+        for search_text, replace_text in data.items():
+            if ("#" + search_text + "#") in paragraph.text:
+                paragraph.text = paragraph.text.replace("#" + search_text + "#", replace_text)
+                for run in paragraph.runs:
+                    run.font.name = 'Times New Roman'
+                    run.font.size = Pt(11)
+    # Замена в таблицах
+    for table in doc.tables:
+        for row in table.rows:
+            for cell in row.cells:
+                for paragraph in cell.paragraphs:
+                    for search_text, replace_text in data.items():
+                        if ("#" + search_text + "#") in paragraph.text:
+                            paragraph.text = paragraph.text.replace("#" + search_text + "#", replace_text)
+                            for run in paragraph.runs:
+                                run.font.name = 'Times New Roman'
+                                run.font.size = Pt(11)
+
+    doc.save(new_portfolio_file_path)
+
+    # Загружаем итоговую копию в папку на гугл диске:
+    f = upload_docx_to_google_drive(new_portfolio_file_path, folder_id)
+    # Удаляем локальную копию:
+    os.remove(new_portfolio_file_path)
+    return f
+
+
+
 def main():
     values = get_google_sheets_data()
     for row in values:
-        if len(row) == flag_index - 1:
-            # Выполняем действия только для строк, где флаг пустой:
-            data = {values[0][i]: row[i] for i in range(len(values[0]) - 1)}
+        if row == values[0]:  # Пропускаем первую строку с заголовками
+            continue
+        if len(row) != 0 and len(row) < flag_index: # Выполняем действия только для строк, где флаг пустой
+            data = dict(zip(values[0], row))
             applicant_name = data.get('Фамилия') + ' ' + data.get('Имя') + ' ' + data.get('Отчество')
-            # print(applicant_name)
 
             folder_id = folder_create(applicant_name, PORTFOLIO_FOLDER_ID)
-            portfolio_id = copy_doc_to_folder(folder_id, PORTFOLIO_DOC_TEMPLATE_ID, applicant_name)
-            update_portfolio_with_data([data], portfolio_id)
+            
+            make_portfolio(data, folder_id, applicant_name)
 
-            row_index = values.index(row) + 1  # Получаем индекс строки (нумерация с 1)
+            # Получаем индекс строки (нумерация с 1):
+            row_index = values.index(row) + 1
             # Обновляем значение флага в текущей строке:
             update_flag_in_sheet(row_index)
             give_user_permission(folder_id, data.get('Электронная почта'))
-
 
 if __name__ == '__main__':
     main()
